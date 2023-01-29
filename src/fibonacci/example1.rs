@@ -163,6 +163,10 @@ impl<F: FieldExt> Circuit<F> for MyCircuit<F> {
         chip.expose_public(layouter.namespace(|| "private a"), &prev_a, 0)?;
         chip.expose_public(layouter.namespace(|| "private b"), &prev_b, 1)?;
 
+        // This part is used to assign value to the advice cells.
+        // 10 indicates the number of raw (gate) or the number of fibonacci addition.
+        // if we change 10 to 6, the out should be assigned with 8. 
+        // if we change 10 to 18, the out should be assigned with 2584.
         for _i in 3..10 {
             let c_cell = chip.assign_row(layouter.namespace(|| "next row"), &prev_b, &prev_c)?;
             prev_b = prev_c;
@@ -182,6 +186,7 @@ mod tests {
 
     #[test]
     fn test_example1() {
+        // k indicate the total raws of this chip.
         let k = 4;
 
         let a = Fp::from(1); // F[0]
